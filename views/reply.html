@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>回复<%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <style type="text/css">
+        html,body,h1,dl,dt,dd{margin:0;padding:0;}
+        html {background-color: #EFEFF4;}
+        .textarea {margin: 10px 10px 30px 10px;padding: 10px;background-color: #fff;}
+        .textarea textarea {width: 100%;min-height: 350px;font-size: 14px; line-height: 20px;border: 0;outline: 0;resize: none;}
+        .btn {display: block;width: 80%;height:40px;margin: 20px auto;font-size:14px;line-height:40px;text-align:center;box-shadow: 5px 0 15px rgba(0,43,114,0.2);background-color: #199DD3;color: #fff;border-radius: 20px;text-decoration: none;}
+        .msglayout {position: fixed;z-index: 9998;top: 0;left: 0;width: 100%;height: 100%;background-color: rgba(0, 0, 0, .1);display: none;transition: opacity .3s ease;}
+        .msgswrap {display: table-cell;vertical-align: middle;text-align: center;}
+        .msg {display: inline-block;padding: 10px;font-size: 14px;line-height: 20px;background-color: #333;color: #fff;}
+        .count {font-size: 12px;margin-top: 0;text-align: right;color: #999;}
+    </style>
+</head>
+
+<body>
+    <div class="textarea">
+        <textarea id="content" placeholder="请输入回复内容，1000字以内" maxlength="1000"></textarea>
+        <div class="count"><span id="count">0</span>/1000</div>
+    </div>
+    <div class="btn" onclick="reply()">回复</div>
+    <div class="msglayout" id="msglayout">
+        <div class="msgswrap">
+            <div class="msg" id="msg"></div>            
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+    <script src="/javascripts/util.js"></script>
+    <script>
+        function contentChange(sender) {
+            $('#count').html(sender.value.length);
+        }
+        function displayMsg(msg, isBack) {
+            $('#msglayout').css('display', 'table');
+            $('#msg').html(msg);
+            setTimeout(function () {
+                $('#msglayout').css('display', 'none');
+                if(isBack){
+                    window.history.go(-2);
+                }
+            }, 1000);
+        }
+        function reply() {
+            var con = $('#content').val();
+            if(con.length < 1){
+                displayMsg('请输入回复内容');
+                return;
+            }
+            Util.post('<%= url %>', {id:'<%= id %>', content: con}, function (data) {
+                if((data.code + '') === '200'){
+                    window.history.back();
+                }else{
+                    displayMsg(data.msg, true);
+                }
+            });
+        }
+        window.onload = function () {
+            $('#content').bind('input propertychange', function() {
+                var that = $(this);
+                if(that.val().length > 1000){
+                    that.val(that.val().substr(0, 1000));
+                }
+                $('#count').html(that.val().length);
+            });
+        };
+    </script>
+</body>
+
+</html>

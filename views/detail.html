@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <style type="text/css">
+        html,body,h1,dl,dt,dd{margin:0;padding:0;}
+        html {background-color: #EFEFF4;}
+        @font-face {
+          font-family: 'iconfont';  /* project id 572487 */
+          src: url('//at.alicdn.com/t/font_572487_b7zmsazose0fi529.eot');
+          src: url('//at.alicdn.com/t/font_572487_b7zmsazose0fi529.eot?#iefix') format('embedded-opentype'),
+          url('//at.alicdn.com/t/font_572487_b7zmsazose0fi529.woff') format('woff'),
+          url('//at.alicdn.com/t/font_572487_b7zmsazose0fi529.ttf') format('truetype'),
+          url('//at.alicdn.com/t/font_572487_b7zmsazose0fi529.svg#iconfont') format('svg');
+        }
+        .iconfont{font-family:"iconfont" !important;font-size:16px;font-style:normal;-webkit-font-smoothing: antialiased;-webkit-text-stroke-width: 0.2px;-moz-osx-font-smoothing: grayscale;}
+        h1 {margin: 10px;font-size: 14px;word-break: break-all;}
+        dl {padding: 10px;font-size: 14px;overflow: hidden;border-bottom: 1px solid #E5E5E5;word-break: break-all;}
+        dt {float: left;width: 50px;color: #999;}
+        dd {margin-left: 50px;margin-bottom: 5px;}
+        .time {color: #999;}
+        .publisher {margin: 0 10px;font-size: 14px;color: #999;}
+        .content {padding: 10px;word-break: break-all;}
+        .content img {max-width: 100%;}
+        .files {margin: 10px;}
+        .files .item {position:relative;display: block;margin-bottom: 5px;margin-right: 20px;font-size: 14px;text-decoration: none;color: #2EA5D6;word-break: break-all;}
+        .files .img:after {content: '\e616';position: absolute;top:2px;right: -20px;font-family:"iconfont" !important;font-size: 18px;color: #2EA5D6;}
+        .group {margin: 10px;font-size: 14px;}
+        .list {background-color: #fff;word-break: break-all;}
+        .list .item {padding: 10px;font-size: 14px;}
+        .list .item .title {height: 20px;overflow: hidden;}
+        .list .item .title div {float: left;max-width: 50%;overflow: hidden;}
+        .list .item .title div + div {margin-top: 2px;height: 14px;font-size: 12px;color: #666;overflow: hidden;}
+        .list .item .con {margin: 10px 0;line-height: 18px;white-space: pre-wrap;}
+        .list .item .time {color: #999;overflow: hidden;}
+        .list .item .time span {float: right;color: #333;}
+        .list .item + .item {border-top: 1px solid #E5E5E5;}
+        .empty {font-size: 14px;color: #999;text-align: center;}
+        .empty img {width: 30%;}
+        #answer {display: none;}
+        .answer {position: fixed;right: 0;bottom:0;left:0;z-index: 10;background-color: #fff;box-shadow:0 0 15px rgba(0,0,0,0.15);}
+        .answer a{display: block;width:80%;height: 40px;margin:10px auto;text-decoration: none;font-size:14px;line-height: 40px;border-radius: 20px;background-color: #199DD3;color: #fff;text-align: center;}
+        .operate {display: none;position: fixed;right: 60px;bottom: 70px;z-index: 10;}
+        .operate-menu .div {display: block;text-decoration: none;overflow: hidden;}
+        .operate-menu .iconfont {float: right;display: inline-block;width: 30px;height: 30px;font-size: 18px;line-height: 30px;text-align: center;border-radius: 50%;background-color: #199DD3;color: #fff;}
+        .operate-menu .item {display: none;margin-bottom: 10px;}
+        .operate-menu .item span {display: inline-block;height: 26px;margin-top: 2px;background-color: #199DD3;color: #fff;line-height: 26px;width: 55px;text-align: center;margin-right: 5px;font-size: 14px;}
+        .operate .open {display: block;}
+        .operate .open .item {display: block;}
+        .msglayout {position: fixed;z-index: 9998;top: 0;left: 0;width: 100%;height: 100%;background-color: rgba(0, 0, 0, .1);display: none;transition: opacity .3s ease;}
+        .msgswrap {display: table-cell;vertical-align: middle;text-align: center;}
+        .msglayout .con {display: inline-block;padding: 10px;font-size: 14px;line-height: 20px;background-color: #fff;box-shadow: 0 2px 8px rgba(0, 0, 0, .33);}
+        .msglayout .con .txt {font-size: 14px;margin: 30px 10px;}
+        .msglayout .con .btns {text-align: right;overflow: hidden;}
+        .msglayout .con .btns div {display: inline-block;width: 60px;height: 30px;font-size: 14px;line-height: 30px;text-align: center;}
+        .msglayout .con .btns .cancle {margin-right: 10px;border: 1px solid #bfbfbf;}
+        .msglayout .con .btns .sure {background-color: #199DD3;color: #fff;}
+        .msg {display: inline-block;padding: 10px;font-size: 14px;line-height: 20px;background-color: #333;color: #fff;}
+        .ql-align-center {text-align: center;}
+        .ql-align-right {text-align: right;}
+    </style>
+</head>
+
+<body>
+    <div style="background-color: #fff;overflow: hidden;">
+        <h1 id="title"></h1>
+        <div class="publisher" id="publisher"></div>
+        <dl>
+            <dt>机构：</dt>
+            <dd id="org">&nbsp;</dd>
+            <dt>时间：</dt>
+            <dd id="time" class="time">&nbsp;</dd>
+        </dl>
+        <div class="content" id="content"></div>
+        <div class="files" id="files"></div>
+    </div>
+    <div id="answer">
+        <div class="group">回复</div>
+        <div class="list" id="list"></div>
+        <div class="empty" id="empty">
+            <img src="data:image/png;base64,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" alt="nodata">
+            <p>还没有任何数据哦~</p>
+        </div>
+        <div style="height: 60px;"></div>
+        <div class="answer">
+            <a href="<%= link %>?id=<%= id %>">回复我的看法</a>
+        </div>
+    </div>
+    <div class="operate" id="operate">
+        <div class="operate-menu" id="menu">            
+            <a class="div item" href="<%= edit %>">
+                <span>编辑</span>
+                <i class="iconfont">&#xe67f;</i>
+            </a>
+            <div class="div item" onclick="disConfirm()">
+                <span>撤回</span>
+                <i class="iconfont">&#xe609;</i>
+            </div>
+            <div class="div">
+                <i class="iconfont" style="font-size: 14px;" onclick="disMenu(this)">&#xe60a;</i>
+            </div>            
+        </div>
+        <div class="msglayout" id="msglayout">
+            <div class="msgswrap">
+                <div class="con">
+                    <div class="txt">撤回后不可再恢复，确定要撤回吗？</div>
+                    <div class="btns">
+                        <div class="cancle" onclick="closeConfirm()">取消</div>
+                        <div class="sure" onclick="del()">确定</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="msglayout" id="msglayout3">
+            <div class="msgswrap">
+                <div class="con">
+                    <div class="txt">回复删除后，不可恢复，确定删除吗？</div>
+                    <div class="btns">
+                        <div class="cancle" onclick="closeConfirm3()">取消</div>
+                        <div class="sure" onclick="del3()">确定</div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+    <div class="msglayout" id="msglayout2">
+            <div class="msgswrap">
+            <div class="msg" id="msg"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+    <script src="/javascripts/util.js"></script>
+    <script>
+        var pageSize = 8,
+            page = 1,
+            total = 0,
+            canLoad = true,
+            delReplyId = 0,
+            delTarget = null; 
+        function disMenu(sender) {
+            var dom = $('#menu');
+            if(dom.hasClass('open')){
+                dom.removeClass('open');
+            }else{
+                dom.addClass('open');
+            }
+        }
+        function disConfirm() {
+            $('#menu').removeClass('open');
+            $('#msglayout').css('display', 'table');
+        }
+        function closeConfirm() {
+            $('#msglayout').css('display', 'none');
+        }
+        function disConfirm3() {
+            $('#msglayout3').css('display', 'table');
+        }
+        function closeConfirm3() {
+            $('#msglayout3').css('display', 'none');
+        }
+        function displayMsg(msg, isBack) {
+            $('#msglayout2').css('display', 'table');
+            $('#msg').html(msg);
+            setTimeout(function () {
+                $('#msglayout').css('display', 'none');
+                if(isBack){
+                    window.history.back();
+                }
+            }, 1000);
+        }
+        function del() {
+            closeConfirm();
+            Util.get('<%= deleteById %>', {}, function (data) {
+                if((data.code + '') === '200'){
+                    displayMsg('撤回成功', true);
+                }else{
+                    displayMsg(data.msg, true);
+                }
+            });
+        }
+        function del3(){
+            closeConfirm3();
+            Util.get('<%= deletReply %>', {articleId: '<%= id %>', commentId: delReplyId}, function (data) {
+                if((data.code + '') === '200'){
+                    $(delTarget).parent().parent().remove();
+                }else{
+                    displayMsg(data.msg, false);
+                }
+            });
+        }
+        function getReplyList(page) {
+            Util.get('<%= url2 %>', { pageNo: page, pageSize: pageSize }, function (data) {
+                canLoad = true;
+                if((data.code + '') === '200'){
+                    total = parseInt((data.data.total - 1) / pageSize) + 1;
+                    Util.displayList3(data.data.records, $("#list"), data.data.canDel);
+                    if(+data.data.total > 0){
+                        $("#list").show();
+                        $("#empty").hide();
+                    }else{
+                        $("#list").hide();
+                        $("#empty").show();
+                    }
+                }
+            });
+        }
+        function delReply(id, sender) {
+           delReplyId = id;
+           delTarget = sender;
+           disConfirm3();
+        }
+        function checkFileType(name) {
+            var suportsuffix = "png|jpg|jpeg|gif|bmp",
+                suffix = name.substr(name.lastIndexOf('.') + 1).toLocaleLowerCase();
+            return suportsuffix.indexOf(suffix) >= 0;
+        }
+        function checkPdf(name) {
+            var suportsuffix = "pdf",
+                suffix = name.substr(name.lastIndexOf('.') + 1).toLocaleLowerCase();
+            return suportsuffix.indexOf(suffix) >= 0;
+        }
+        window.onload = function () {
+            if('<%= url2 %>' !== 'null'){
+                $("#answer").show();
+                getReplyList(1);
+                Util.scrollLoad(function () {
+                    if(canLoad && page < total){
+                        canLoad = false;
+                        getReplyList(++page);
+                    }
+                });
+            }
+            Util.getDetail('<%= url %>', function (data) {
+                if((data.code + '') === '200'){
+                    var files = data.data.url ? JSON.parse(data.data.url) : [],
+                        html = [];
+                    document.getElementById('title').innerHTML = data.data.title;
+                    document.getElementById('publisher').innerHTML = data.data.publisher;
+                    document.getElementById('org').innerHTML = data.data.org;
+                    document.getElementById('time').innerHTML = Util.format(new Date(data.data.publishTime), 'yyyy-MM-dd hh:mm');
+                    document.getElementById('content').innerHTML = data.data.content;
+                    for(var i=0,len=files.length; i<len; i++){
+                        if(checkFileType(files[i].fileName)){
+                            html.push('<a class="item img" href="<%= server %>/api/file/' + files[i].uploadUrl + '">' + files[i].fileName + '</a>');
+                        }else if(checkPdf(files[i].fileName)) {
+                            // html.push('<a class="item img"  href="/author/pdf?file=<%= server %>/api/file/' + files[i].uploadUrl + '">' + files[i].fileName + '</a>');
+                            var url = '<%= server %>/api/file' + files[i].uploadUrl;
+                            html.push('<a class="item img"  href="/author/pdfjs?file=' + encodeURI(encodeURI(url)) + '">' + files[i].fileName + '</a>');
+                            // html.push('<a class="item img"  href="/author/pdfjs?file=' + files[i].uploadUrl + '">' + files[i].fileName + '</a>');
+                        } else{
+                            html.push('<a class="item">' + files[i].fileName + '</a>');
+                        }                        
+                    }
+                    document.getElementById('files').innerHTML = html.join('');
+                    if(data.data.isEdit){
+                         $('#operate').show();
+                    }
+                }else{
+                    displayMsg(data.msg, true);
+                }
+            });
+        };
+        $(function () {   
+          var isPageHide = false;   
+          window.addEventListener('pageshow', function () {   
+            if (isPageHide) {   
+              window.location.reload();   
+            }   
+          });   
+          window.addEventListener('pagehide', function () {   
+            isPageHide = true;   
+          });   
+        });
+    </script>
+</body>
+
+</html>

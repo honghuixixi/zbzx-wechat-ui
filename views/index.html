@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>工作台</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <style type="text/css">
+        html,body,header,footer,h1,h2{margin:0;padding:0;}
+        html {background-color: #EFEFF4;}
+        header {height: 100px;padding: 0 12px;background-color: #2EA5D6;color: #fff;overflow: hidden;}
+        header h1{height: 25px;margin: 25px 0 5px 0;font-size: 18px;overflow: hidden;}
+        header h2{height: 36px;font-size: 14px;font-weight: 300;overflow: hidden;}
+        .row{display: flex;background-color: #fff;}
+        .row-col{flex:1;height: 100px;font-size: 14px;text-align: center;border-top: 1px solid #E5E5E5;text-decoration: none;color: #333;}
+        .row-col + .row-col {border-left: 1px solid #E5E5E5;}
+        .row-col .img{position:relative;display: block;width:30px;height: 30px;margin: 20px auto 5px auto;}
+        .row-col .img img {width: 100%;height: 100%;}
+        .row-col .tip:after{content: '';position: absolute;top: -5px;right: -5px;width: 10px;height: 10px;border-radius: 50%;background-color: #f00;}
+        footer {position: fixed;right: 0;bottom: 0;left: 0;height: 60px;background-color: #fff;box-shadow:0 0 15px rgba(0,43,114,0.2);display: flex;}
+        footer .col{flex: 1;text-align: center;font-size: 14px;color: #999;}
+        footer .col .iconfont {display: block;width: 30px;margin:14px auto 2px auto;}
+        footer .active {color: #2EA5D6;}
+        @font-face {
+          font-family: 'iconfont';  /* project id 572487 */
+          src: url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.eot');
+          src: url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.eot?#iefix') format('embedded-opentype'),
+          url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.woff') format('woff'),
+          url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.ttf') format('truetype'),
+          url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.svg#iconfont') format('svg');
+        }
+        .iconfont{font-family:"iconfont" !important;font-size:16px;font-style:normal;-webkit-font-smoothing: antialiased;-webkit-text-stroke-width: 0.2px;-moz-osx-font-smoothing: grayscale;}
+        .group {margin-top: 20px;border-top: 1px solid #BFBFBF;background-color: #fff;}
+        .group-row {display: flex;height: 40px;padding: 0 10px;font-size: 14px;line-height: 40px;border-bottom: 1px solid #BFBFBF;}
+        .group-row .iconfont {display: inline-block;width: 22px;}
+        .group-row label {display: inline-block;color: #999;}
+        .group-row span {flex:1;text-align: right;overflow: hidden;}
+        .group-row a {flex:1;text-align: right;text-decoration: none;color: #333;}
+        .group-row .btn {position: relative;display: inline-block;width: 50px;height: 26px;margin-top: 7px;border: 1px solid #bfbfbf;border-radius: 15px;}
+        .group-row .open {background-color: #2EA5D6;border-color: #2EA5D6;}
+        .group-row .circle {position:absolute;top:0;left:0;width: 26px;height: 26px;background-color: #fff;box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);border-radius: 50%;transition: left .5s;}
+        .group-row .open .circle {left: 24px;}
+        .exit {display: block;width: 80%;height:40px;margin: 20px auto;font-size:14px;line-height:40px;text-align:center;box-shadow: 5px 0 15px rgba(0,43,114,0.2);background-color: #199DD3;color: #fff;border-radius: 20px;text-decoration: none;}
+        .msglayout {position: fixed;z-index: 9998;top: 0;left: 0;width: 100%;height: 100%;background-color: rgba(0, 0, 0, .1);display: none;transition: opacity .3s ease;}
+        .msgswrap {display: table-cell;vertical-align: middle;text-align: center;}
+        .msglayout .con {display: inline-block;width: 200px;padding: 10px;font-size: 14px;line-height: 20px;background-color: #fff;box-shadow: 0 2px 8px rgba(0, 0, 0, .33);}
+        .msglayout .con .txt {font-size: 14px;margin: 30px 10px;}
+        .msglayout .con .btns {text-align: right;overflow: hidden;}
+        .msglayout .con .btns div {display: inline-block;width: 60px;height: 30px;font-size: 14px;line-height: 30px;text-align: center;}
+        .msglayout .con .btns .cancle {margin-right: 10px;border: 1px solid #bfbfbf;}
+        .msglayout .con .btns .sure {background-color: #199DD3;color: #fff;}
+    </style>
+</head>
+
+<body>
+    <div id="home">
+        <header>
+            <h1><%= user.name %></h1>
+            <h2><%= user.deptName %></h2>
+        </header>
+        <div class="row">
+            <a class="row-col" href="notices">
+                <div class="img" id="notice">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEEAAABDCAMAAAD04Zh8AAAAqFBMVEX///9QTUxoZmVNSklST04vocdMSUhHcEwwosdNSklNSklPsNBNSklNSkkuocdMSUhSVFU2pclAqcwwosdZV1YuocdNSklIVlovocdPTEsxn8Myo8hQTUwxosgzo8g1pMlLTEw/cYI0k7I3hZ9HWWBIWV8+c4VFYGlBa3k5hp88eo8ylbZMSUguocc9dYc2i6dKTk8zk7M5f5ZFX2cwm79CZ3NGWV9IVFfuZoLzAAAALHRSTlMDYhOhQsHwAIGCkRPB0fDhMjIjkSLgseDRcqdiUnJSQvmwjfqxk/jC0JnY8jntZFIAAAJPSURBVFjD7dhHl6JAFAVggiAlYBaMbfd0mHQvoqj9///ZLAiWJEFXc453hYv6qCoenHoqXeXR1AvCBAaLBwQdAIDe3YKKJJ17BS8VxL2CkwrePYKmeiaymLraUpjq0vA4rz+HzQWtl4xydSGE8Nz4V/ipNRTW8f0dNRuwPJwBAINOIyGegCPPmeQuqnoqeUHTizcbkSR33wCg3xRcANClBdurJeMcT6VEt6SOpRdhvOzzkgMAfNQKCwCQHr0lj0+JP+NqYXgNjOfM5wAg/LuqFNyrF3HUZzEBgIiTCkEF4NYDZARgx2W5MAAwvQFwHwIRuSkTVLli7BkrEgDYkdsSwQPMrBAmVQCPIXAiZ3ZB0ORtHLE6ARCStAqCKu+CUSPs42XQzgs9YJBVAutyBoLLJLryN613exeSZZxIzvKCKZXjvFZ4ByKSHOUE6atu1wLcxVuZ1ESpsL0pgGRSmKXCpplgVAvWU3gKT+F/Fvqx0HPxQByhdPBglOmDgKl0pyKfX0HjfH1Oi2c5u/5Ln89LUZi0AjgrCkY7gUXBengO7fah/1J2rn6x3nzf/2Fd5bfv+29WPqtxRXcgip3RurLVKRUW1wfb9Ly+bi4Ms2PhOJ3vK4B4YatGPc4gveNWOsue40ujkSAAmNPLiWwfAjjE11azTm0AwB0qitLPgCir40bC0ARgCk2ZkMcAAMJ9WkINu8W43zU98XWCDHDVuGMdXvWL3ylgtOh5NZEZYXBMgLndqmvWVN1xHOfjPXsNJq3/f0heto1BkrPJWLlTqM0//hZiraaBeMoAAAAASUVORK5CYII=" alt="通知">
+                </div>
+                <span class="txt">通知</span>
+            </a>
+            <a class="row-col" href="news">
+                <div class="img" id="news">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABDCAMAAAAbI/NCAAAAdVBMVEX///9MTExMSUhbWVgunr9oZmVMSUhST05NSklNSkkvn8BNSkktnr9MS0s/psVQTUwunsBNSklOrckvn8BQTUxPTEstnr8yoME1osIwoMAxoMBTUE9MSUgtnr81iaE9c4M/bHkvmbhEXmUyka1KTk83gZdIU1a9qWi+AAAAHHRSTlMDkfAjwRPgQsGBgaHw0iNirLETkVJy1kwycmIyZXfcwgAAAXFJREFUWMPtl1t3gyAQhFeNooma+6XtTO7p//+JfUBJSLCV2J7T9jiPLPvtMqigSK//oyyEh0bxff4IfgojO1/BV2m3BgDYgBQolFtOw1wA5eN4D/ghwLIrAGnUATAGgDB7HiAJAKBQHoByczsUTfUTHsRtAXNyYg0udBPhuDlPJSgMgCRnVjgOqhe1wUwdVyIiQQW4mzE4HTUiaygPAAsRGe7cAJKXMwAgUe7yQCKyXrEZwMPe+dGrymMazebkZwBye3ww05RfyDqnG7DM4gpA7s62mXX5IC4H1YwHQAakBkDLTLM5b/KSswmQArgCyMt7bWZVPlzKZmXCXwOMmUXt6Wx+E20BuK5DN7Je0RdgzAwzKSd3kXYAvY4iuprnCyC3u4tj1APQoF8DGPSAHvD3AedHQLZtrT1wtAH+N9W9DfC/K59sgEyfaMC6H9THR9v8A0kO7fNXtTfxoDdj6DxcPfTtgLwr4NUzPy/7f9Vfow+DVef+wbgOYgAAAABJRU5ErkJggg==" alt="消息">
+                </div>
+                <span class="txt">消息</span>
+            </a>
+            <a class="row-col" href="articles">
+                <div class="img" id="article">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABDCAMAAAAbI/NCAAAA+VBMVEX////+/v5oZmX///9NSkn///+zsrE0ocFNSklST05MTExMSUj///+Qj47///9MSUj09PRPTEv///9MS0ounr9EXmX///////9QTUz////k5ORQTUxTUE9bWVitrKzr6upKU1U5pMQxoMCfnp1JUVT////T09L///9OrclNSkn////Lysrs7OzEw8P///97eXj///////9Cb313dXQunr8tnr8unr9MSUj///8tnr+Wz989c4N5d3ZJT1E6pMNftc4yj6tvvNP0+PlXVFMvmbhAaXQ1iaF8w9e43unf8PWJyduEgoGhn545fpLp6enZ2Ng3g5rL5+9ua2qVwy3kAAAAN3RSTlMD8hNigcHgQsFCofAy+xPg8HLg1NH+odFigeNSMiPs64sqYvOtQupyE5Ej4vvuUvSxkXHNwfCxJ2W/3AAAAgxJREFUWMPtlmlTwjAQhlvOCgVUARFvHRXv26RKATnlVv//jzEbTtuNbIcZhw+8X0jTfZ9uki1dTVPI1PlEac27NqUzm12Vvzee/X6w7VUYY/l9MVr3aL/wrwvXMZOqQBLpEw92MyjTXmVDxeSlvuUpe6HQCMCGE5txkv+EqwA8SALA6vllKBS6HQP2xJU8DT9xAfo3c+uacBjbEcM4FXExhulK3Hk0jLVdpT0BYX3Oy6ifdQSgDYOID/VHxhvWxwF5casjR9EdtZ/1OO/hgNhkcQhhTc4HdjQoojwKyIo7pm/bgHHC6fdFxewGrO1MhO1XFAnoEJuBqwCSgPRrcXiN9eO8Q204HT6o5gySAuS1MhiecaVGtTwVPdI0M63y6+YwIuNeA5zupBh11B8cv0u7KGBqJu6/Dzp0t2Uqw/GZP7UEKAAJgy4U4FEH8wKMeQFIKa/QhZ9CLkwWPC/sAoQtskT4m7UELDbg/RVXgQgoqv6VP4iApvK70Jgzg6//2oNlIcEx4HvYogKK5TkLqawspBYN0FD5m4UFL6RzOqCEAjbogE83AL63D2RASkTXLXej6SUB27LcrW6tSvLXbbmC3wAtAF9cuzsbUarJyKoTIHeBrpJlvTj7dQ8EuytSCbs6p0CU6E+J51tPSO/lO0jZs921OmzFcw5t3w6TxJNMHqo6wCMKInmkLZB+AATJGGJIftNHAAAAAElFTkSuQmCC" alt="资料">
+                </div>
+                <span class="txt">资料</span>
+            </a>
+        </div>
+        <div class="row">
+            <a class="row-col" href="adverses">
+                <div class="img" id="complaint">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABDCAMAAAAbI/NCAAAAq1BMVEX///8uocdNSkk/qcxPsNBoZmVMSUgwosc1pMkvocdMSUhNSklST04woscuocdbWVhNSkkyo8hQTUxNSklNSklTUE8vocdQTUwwoscvocdPTEsxosgzo8g9dok8eo9BaXdMSUguocf///9FX2c9dYc2i6eeusM5fpVAa3jR19kylrdIVFdoqL0wm79KTk80kK+Br75GWV/v8PA9ocNRpMCrwMfd4OKRtMC9ys5t7FM+AAAAIHRSTlMD8IEkExPwgULB4cFCoeAjo2JikdEy0VKRsXJyUuXY5BuvA7kAAAKjSURBVFjD7ZfZduIwEEQTMDsGCAnAJDOjCmvYt4T8/5dNS2ovso1t+XFO6gEBhy6XpdsSfnj4UYpGTSGqg0rh+oFQei5a3xasUkGDZ8o/avfotdhNPNG1X2ikefg76RcwaOrszm8yWmPo2NaXOPoQGyFWQMOyvlLVAfrAkiLMgbp1gKYcOwCmQkyBoVV9l676RGMNAOY6gtVE9jQ/ziMAyAgboGNR/0LXbHsBgDV9XAK1/AYtIVo0lHUAYEURdnh0bCCWDLlcj/VeiJlFBIK4JwPA10yIPUUo54e4S2MDx/P7pzLY7RVNrhXEdWzfSTflsFRAo2wDcQMLafChbyI/0B7EbzAM8gMtIa5oiMMGDHQjN8R9ADdp8MkGeYHu6S5yOgDUJC4QRMgBtAGxacBAv+aCWHeRMjj6NK1UhHSg2xxgrEukwRbhCFlAt0yITYMcQHsQuyGDa2Cw0z3lpkI8CHfRFxkARoRUoH/5ELM+IgYM9CQD4jruGkigD3eB9iD2A+A7IJl1SgG6Ww0gZi1iBgz0WwrE6ii4ayCBPiUD3WWGXkO/vgW95Omgge5nQMzahlohC+i2eRR4s/h1iRrcA5ohNgIAlytiYqCddIhTlAx0FOI0JQHtQRwJsD2fFwkOm9ghEYdY6WpuKClAl6Jd5HMUJykJaA/iSID7BvPIIZEAsdJRGnwnzaMJtIR4ZHZRsKGcL0kGJtA9DXEsAIDt9pK8lBrojqYpEeIMrfVC1NigFYc4Sys1jRpobWAVQOFIBhhrA4KgbFcv10EaKKDlX6KKa1dPMO7VG5c7UUytRA0p20HK0XuBvU47bSBxrAzs66dczzx3/8ystDz4s8E70xgF5e0K5YL1waNQv0j5Yy20tdYn/teNkGoh1UOyfgj7r/UPpjsNH/seMQQAAAAASUVORK5CYII=" alt="售后与不良事件">
+                </div>
+                <span class="txt">售后与不良事件</span>
+            </a>
+            <a class="row-col" href="technicals">
+                <div class="img" id="consultation">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABDCAMAAAAbI/NCAAAA0lBMVEX///9NSklMSUhbWVhNSklTUVBoZmVMSUhST05QTUxNSklNSklPsNBPTEsuoccvocYwosdQTUxNSklNSkkyo8gvocczo8gxosg1pMk2pckvocdAqcwuoccwosdKUVRFYGhFYGk3i6dAbXwzlrc+dYc5gJc3kK1GW2EwosdFYGhLTk9LT1FJVVk/cYIylbU3h6JJUlUxmr5KUFFAeYw2iqZMSUguocdFX2dKTk8wm79Banc2i6dGWV9IVFc9dYc5gJdDZG83hZ8ylrc0kK87eo8/b3/tr6LlAAAANXRSTlMD0eAjwTIT8EJigaETcvDCgVKRsWLRUnJCMrEj4JHNzLacvbnQ5nHvoeLco7mw5N3o1PJm9GIKWRkAAAP6SURBVFjDtZfXlqNIEEQTW4BcS2pvxu7MGbPW3ASEfPf8/y/tA0gqISHRc87mGwURVGZFpRH5/8xLfADccRz+DLxEl2aSV+NjgHESRdHw+zfACV6HT8AkoUj38r6vWqSQ/fMa/BAcT0Ru+lraAmYfu+0JXNxQRL7o1hYwv+q+IgBRECdf0zSDaZpO5kW+JNOrtgQdMNRsBoVetDvAzgG64ljkD23gO8Q0Tadpms62C9mHs/he9Xfn3ae1qmqhqqrPi0lWrZ/WQ+hXwvv8qHVbLQEgPoEPHADTux3oMVtPAPjejDcAnfBJm6yYAfzatH8XMHH3SpstnwC8PU7gACa46+tJmwD80nB/MEH3DL5kyN4fCQDA8OT+K1sC6eUBgQ8kcn8er/kMWNzV8BHgyI22sQKYXR3ZQPTQb0WgS2BxcxABXwbt8LoGpv1u7QIzvLR0uzq7hee9u23AtSM4ZX6KYAX8eKx5MBLrixSKUwwZTPVuX0TRte1lRvZ8Rk255cMYkIvtQReqK5j+1UywAIqBnYWtM8gz1qoL+JY3EjwDc90RACPZiGAO63KXfzd7AUx2QQiAXnd3yEtV1YsEskUTwRRSvbZ1HN3uXq1V9aqsj8sGN1JId1neJpjAXFX7dyISuJDN8yYp1QhuNvhUVbW8ruEIyCZHZDkH9H6P4KLKWNNctb/1LngDkC1fiiMEA5ug8yHX1azED+wCFHzNAGD6Y7X1ZpEeEEA2q4JWr4DX/87TTa16ybeJ0SKIt9VvtXXftu5FX4uXyQzKoOYAsNoQeAYAWGzCF8bJcJ/i86f5StcvUyArCgDIPlrJACBTVb0RkdgAjt2axQb4c6D6vAQmFeDtTshAeX73IuIBgG+V7M3K9Zd+ke3Kd1WRLIJ+V0RGB61dAgAdEele/j6tEdg7uNgk2LJJslMurlc9vc9qBGZLUCbKMiauVcdH+ytvAABTC+JMnyxZ4O5XDWvFBwA6+yECvbUYTVArnLuVzZa9upDy7R9H495+gx2N/MST/aD9Zr12AfijdR8MzIrbvd5ybBrK/vE67rzL9bA+v2mDDw04Il0dHHR40GKwCB1gJCKPNwct5ukWbot3IRCRwcORHsM/67+h45d6eDrepJ+Nfy+qNnp9dExwTsEjFxOJb0v0cFDpNTofOzAKpXcyUn4Zn53LY3B7IkE8NtDxRAJzMlChwVhHWeU6B8DpeeUhGO+km3upLAIA449ibyuC4dlxaXcNQwewIIHTQioxViTDxPc7gT2MnJeaRAacI3qIfDDDVrfFB5z9gTuMfcD32g6uLoCTxFEg4kXDcox3Y2lvsV+f+ZzXwEVEvN7Y3YDdcc+Tn7IgiqLo9KD3H7GFfnwkmwV/AAAAAElFTkSuQmCC" alt="技术咨询">
+                </div>
+                <span class="txt">技术咨询</span>
+            </a>
+            <a class="row-col"></a>
+        </div>
+    </div>
+    <div id="me" style="display: none;">
+        <div class="group">
+            <div class="group-row">
+                <i class="iconfont">&#xe655;</i>
+                <label>登录名</label>
+                <span><%= user.loginName %></span>
+            </div>
+            <div class="group-row">
+                <i class="iconfont">&#xe658;</i>
+                <label>用户姓名</label>
+                <span><%= user.name %></span>
+            </div>
+            <div class="group-row">
+                <i class="iconfont">&#xe657;</i>
+                <label>手机号</label>
+                <span><%= user.mobile %></span>
+            </div>
+            <a class="group-row" href="changepwd" style="text-decoration: none;">
+                <i class="iconfont" style="color: #666;">&#xe65a;</i>
+                <label>修改密码</label>
+                <span></span>
+                <i class="iconfont" style="color: #333;text-align: right;">&#xe616;</i>
+            </a>
+        </div>
+        <div class="group">
+            <div class="group-row">
+                <i class="iconfont">&#xe65c;</i>
+                <label>所属机构</label>
+                <span><%= user.tenantName %></span>
+            </div>
+            <div class="group-row">
+                <i class="iconfont">&#xe653;</i>
+                <label>所属部门</label>
+                <span><%= user.deptName %></span>
+            </div>
+            <div class="group-row">
+                <i class="iconfont">&#xe65d;</i>
+                <label>上级行政单位</label>
+                <span><%= user.manageTenantName %></span>
+            </div>
+        </div>
+        <div class="group">
+            <div class="group-row">
+                <i class="iconfont">&#xe65e;</i>
+                <label>接收消息</label>
+                <div style="flex: 1;text-align: right;">
+                    <div class="btn close" id="recive" onclick="openMsg(this)">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="group-row">
+                <i class="iconfont">&#xe65b;</i>
+                <label>联系邮箱</label>
+                <span><%= user.email %></span>
+            </div>
+        </div>
+        <a class="exit" href="/users/logout">退出</a>
+    </div>
+    <div class="msglayout" id="msglayout3">
+       <div class="msgswrap">
+            <div class="con">
+                <div class="txt">是否打开消息推送？</div>
+                <div class="btns">
+                    <div class="cancle" onclick="closeConfirm3()">取消</div>
+                    <div class="sure" onclick="openRecive()">确定</div>
+                </div>
+            </div>
+        </div>
+    </div>  
+    <div style="height: 60px;"></div>
+    
+    <footer>
+        <div class="col active" onclick="chooseHome(this)">
+            <i class="iconfont">&#xe64e;</i>
+            <span>工作台</span>
+        </div>
+        <div class="col" onclick="chooseMe(this)">
+            <i class="iconfont">&#xe64d;</i>
+            <span>我的</span>
+        </div>
+    </footer>
+    <script src="https://cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+    <script src="/javascripts/util.js"></script>
+    <script>
+    function changeTab(id1, id2, sender, title){
+        var dom1 = $(id1),
+            dom2 = $(id2);
+        $('footer .col').removeClass('active');
+        $(sender).addClass('active');
+        dom1.show();
+        dom2.hide();
+        // $("title").html(title);
+        // $iframe.on('load',function() {
+        //     setTimeout(function() {
+        //         $iframe.off('load').remove();
+        //     }, 0);
+        // }).appendTo($body);
+        Util.setTitle(title);
+    }
+    function chooseHome(sender) {
+        changeTab('#home', '#me', sender, '工作台');
+    }
+    function chooseMe(sender) {
+        changeTab('#me', '#home', sender, '我的');
+    }
+    function setTip(data, key) {
+        var dom = $('#' + key);
+        dom.removeClass('tip');
+        if(data[key].hasNews){
+            dom.addClass('tip');
+        }
+    }
+    function setReceive(remote, local) {
+        Util.get(remote, {openId: '<%= openid %>', userId: '<%= user.id%>'}, function (data) {
+            if((data.code + '') === '200'){
+                $('#recive').addClass('open');
+                Util.post(local, {}, function () {});
+            }                
+        });  
+    }
+    function openMsg(sender) {
+        var dom = $(sender);
+        if(dom.hasClass('open')){
+
+            Util.get('<%= disableWeiXinBinding %>', {openId: '<%= openid %>', userId: '<%= user.id%>'}, function (data) {
+                if((data.code + '') === '200'){
+                    dom.removeClass('open');
+                    Util.post('/users/unbindRecive', {}, function () {});
+                }                
+            });            
+        }else{       
+            setReceive('<%= enableWeiXinBinding %>', '/users/bindRecive');      
+        }
+    }
+
+    function disConfirm3() {
+        $('#msglayout3').css('display', 'table');
+    }
+    function closeConfirm3() {
+        $('#msglayout3').css('display', 'none');         
+    }
+    function openRecive() {
+        closeConfirm3();
+        setReceive('<%= enableWeiXinBinding %>', '/users/bindRecive');
+    }
+    window.onload = function() {
+        var isRecive = '<%= user.isRcvMsg %>' === 'true';
+        $('#recive').removeClass('open');
+        if(isRecive){
+            $('#recive').addClass('open');
+        }
+        Util.get('<%= stats %>', {}, function (data) {
+            if((data.code + '') === '200'){
+                setTip(data.data, 'notice');
+                setTip(data.data, 'news');
+                setTip(data.data, 'article');
+                setTip(data.data, 'complaint');
+                setTip(data.data, 'consultation');
+            }
+        });
+        Util.get('<%= isNeedWeiXinBindingTips %>', {openId: '<%= openid %>', userId: '<%= user.id%>'}, function (data) {
+            if((data.code + '') === '200' && data.data){
+                Util.get('/users/getHomeount', {}, function (data) {
+                    if(data.data < 3){
+                        disConfirm3();
+                    }
+                });                
+            }
+        })
+    };
+    $(function () {   
+      var isPageHide = false;   
+      window.addEventListener('pageshow', function () {   
+        if (isPageHide) {   
+          window.location.reload();   
+        }   
+      });   
+      window.addEventListener('pagehide', function () {   
+        isPageHide = true;   
+      });   
+    });
+    </script>
+</body>
+
+</html>

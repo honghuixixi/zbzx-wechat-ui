@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title><%= title2 %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <link href="/javascripts/editor/summernote-lite.css" rel="stylesheet">
+    <style type="text/css">
+        html,body,textarea,p{margin:0;padding:0;}
+        html {background-color: #EFEFF4;}
+        @font-face {
+          font-family: 'iconfont';  /* project id 572487 */
+          src: url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.eot');
+          src: url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.eot?#iefix') format('embedded-opentype'),
+          url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.woff') format('woff'),
+          url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.ttf') format('truetype'),
+          url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.svg#iconfont') format('svg');
+        }
+        .iconfont{font-family:"iconfont" !important;font-size:16px;font-style:normal;-webkit-font-smoothing: antialiased;-webkit-text-stroke-width: 0.2px;-moz-osx-font-smoothing: grayscale;}
+        .group {display: flex;height: 40px;margin-top: 20px;font-size: 14px;line-height:40px;border-top: 1px solid #BFBFBF;border-bottom: 1px solid #BFBFBF;background-color: #fff;}
+        .group label {display: inline-block;width: 70px;margin-left: 10px;}
+        .group .con {flex: 1;border: 0;outline: 0;}
+        .group .iconfont {display: inline-block;margin-right: 5px;}
+        .content {background-color: #fff;border-bottom: 1px solid #bfbfbf;}
+        .content textarea{display: block;width: 100%;min-height: 300px;border: 0;outline: 0;resize: none;overflow: hidden;}
+        .save {display: block;width: 80%;height:40px;margin: 20px auto;font-size:14px;line-height:40px;text-align:center;box-shadow: 5px 0 15px rgba(0,43,114,0.2);background-color: #199DD3;color: #fff;border-radius: 20px;text-decoration: none;}
+        .msglayout {position: fixed;z-index: 9998;top: 0;left: 0;width: 100%;height: 100%;background-color: rgba(0, 0, 0, .1);display: table;transition: opacity .3s ease;}
+        .msgswrap {display: table-cell;vertical-align: middle;text-align: center;}
+        .msg {display: inline-block;padding: 10px;font-size: 14px;line-height: 20px;background-color: #333;color: #fff;}
+        .orgs-search {display: flex;position: fixed;top:0;right: 0;left: 0;z-index: 10;height: 40px;font-size: 14px;line-height: 40px;background-color: #fff;border-bottom: 1px solid #bfbfbf;}
+        .orgs-search .iconfont {display: inline-block;width: 40px;text-align: center;}
+        .orgs-search input {flex: 1;border: 0;outline: 0;}
+        .orgs-search span {display: inline-block;width: 80px;text-align: center;color: #2EA5D6;}
+        .orgs-list {margin: 55px 0 80px 0;border-top: 1px solid #bfbfbf;background-color: #fff;}
+        .orgs-list .item {display: flex;padding: 8px 5px;font-size: 14px;line-height: 20px;border-bottom: 1px solid #bfbfbf;overflow: hidden;}
+        .orgs-list .item input {float: left;width: 18px;height: 18px;margin-top: 0;margin-right: 5px;}
+        .orgs-list .item span{flex: 1;}
+        .orgs-choose {position: fixed;right: 0;bottom:0;left:0;z-index: 10;background-color: #fff;box-shadow:0 0 15px rgba(0,0,0,0.15);}
+        .orgs-choose .btn {display: block;width:80%;height: 40px;margin:10px auto;text-decoration: none;font-size:14px;line-height: 40px;border-radius: 20px;background-color: #199DD3;color: #fff;text-align: center;}
+        #articleEditor {font-size: 14px;min-height: 200px;}
+        #articleEditor img {max-width: 100%;}
+        [v-cloak] {display: none;}
+        .upload {display: table;width: 100%;padding-bottom: 8px;margin: 20px 0;border-top: 1px solid #bfbfbf;border-bottom: 1px solid #bfbfbf;background-color: #fff;}
+        .upload .txt {width: 60px;font-size: 14px;line-height: 36px;text-align: right;}
+        .upload-td {display: table-cell;vertical-align: top;overflow: hidden;}
+        .upload-td .iconfont {font-size: 20px;line-height: 50px;text-align: center;}
+        .upload-td .item {position: relative;float:left;display: inline-block;width: 50px;height: 50px;border: 1px solid #bfbfbf;margin: 10px 0 0 14px;}
+        .upload-td .item .close2 {position: absolute;top: -7px;right: -7px;z-index:2;display: inline-block;width: 18px;height: 18px;font-size: 12px;line-height: 18px;text-align: center;background-color: #f00;color: #fff;border-radius: 50%;}
+        .upload-td .item a {display: block;position: absolute;top: 0;right: 0;bottom: 0;left: 0;z-index:1;text-decoration: none;}
+        .upload-td .item a img {width: 100%;height: 100%;}
+        .note-editor.note-frame {border: 0;}
+        .ql-align-center {text-align: center;}
+        .ql-align-right {text-align: right;}
+        .note-tooltip {display: none;}
+        .note-modal-header {padding: 10px;}
+        .note-modal-header .close {margin: 0;}
+        .note-modal-title {font-size: 18px;text-align: left;}
+        .note-input {border: 0;}
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="main" id="main" v-show="pageType === 1">
+            <div class="group" @click="showOrgPage()">
+                <label>选择机构</label>
+                <input class="con" id="orgName" type="text" placeholder="请选择" readonly="readonly" v-model="orgName">
+                <i class="iconfont">&#xe616;</i>
+            </div>
+            <div class="group">
+                <label>标题</label>
+                <!-- <input class="con" id="title" type="text" maxlength="50" placeholder="标题名称，50个字符以内" v-model="record.title"> -->
+                <textarea class="con" id="title" maxlength="50" placeholder="标题名称，50个字符以内" v-model="record.title" style="padding: 13px 0 7px 0;resize: none;"></textarea>
+            </div>
+            <div class="content">
+                <div id="articleEditor"></div>
+            </div>
+            <div class="upload">
+                <div class="upload-td txt">上传附件</div>
+                <div class="upload-td">
+                    <div class="item iconfont" v-if="record.files.length < 20" @click="uploadImg">&#xe63d;</div>
+                    <div class="item" v-for="v in record.files">
+                        <div class="close2" @click="removeFile(v)">X</div>
+                        <a v-if="v.isImg">
+                            <img :src="'<%= server %>/api/file' + v.uploadUrl">
+                        </a>
+                        <a v-if="!v.isImg">
+                            <img src="/images/file.png">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="save" @click="save">发布<%= title %></div>
+        </div>
+        <div class="orgs" id="orgs" v-show="pageType === 2">
+            <div class="orgs-search">
+                <i class="iconfont">&#xe652;</i>
+                <input id="kwd" type="text" placeholder="关键字检索" v-model="keyword">
+                <span @click="searchOrgs">搜索</span>
+            </div>
+            <div class="orgs-list" id="list">
+                <div class="item" v-for="v in orgList">
+                    <input type="checkbox" v-model="record.ids" :value="v.id + '[|]' + v.name">
+                    <span>{{v.name}}</span>
+                </div>
+            </div>
+            <div class="orgs-choose">
+                <div class="btn" @click="closeOrgPage">选择</div>
+            </div>
+        </div>
+        <div v-show="showErr">
+            <div class="msglayout" id="msglayout">
+                <div class="msgswrap">
+                    <div class="msg" id="msg">{{msg}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+    <script src="/javascripts/util.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script>
+        Util.get('<%= getJsSdkConfigInfo %>' + window.location.href, {}, function (data) {
+            wx.config({
+              debug: false,
+              appId: data.appId,
+              timestamp: data.timestamp,
+              nonceStr: data.nonceStr,
+              signature: data.signature,
+              jsApiList: [
+                'chooseImage',
+                'previewImage',
+                'uploadImage',
+                'downloadImage'
+              ]
+          });
+        });
+    </script>    
+    <script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+    <script src="/javascripts/editor/summernote-lite.js"></script>
+    
+    <script>
+    wx.ready(function(){
+        new Vue({
+            el: '#app',
+            data: {
+                editor: null,
+                record: {
+                    ids: [],
+                    title: '',
+                    files: [],
+                    content: []
+                },
+                keyword: '',
+                tenants: [],
+                orgList: [],
+                pageType: 1, //页面类型1：发布页面 2：选择结构页面
+                showErr: false,
+                msg: '',
+                isSave: true
+            },
+            computed: {
+                orgName: function () {
+                    var names = [];
+                    for(var i=0,len=this.record.ids.length; i<len; i++){
+                        var arr = this.record.ids[i].split('[|]');
+                        names.push(arr[1]);
+                    }
+                    return names.join('；');
+                }
+            },
+            methods: {
+                closeOrgPage: function () {                    
+                    if(this.record.ids.length < 1){
+                        this.displayMsg('请选择机构');
+                    }else{
+                        this.keyword = '';
+                        this.pageType = 1;
+                    }
+                },
+                showOrgPage: function () {
+                    this.pageType = 2;
+                    this.searchOrgs();
+                },
+                searchOrgs: function () {
+                    var param = {
+                            tenantId: '<%= tenantId %>',
+                            keyword: this.keyword
+                        },
+                        _this = this;
+                    this.orgList = [];
+                    this.tenants = [];
+                    Util.get('<%= orgurl %>', param, function (data) {
+                        if((data.code + '') === '200'){
+                            _this.orgList = data.data || [];
+                            _this.tenants = _this.orgList;
+                        }
+                    });
+                },
+                checkParam: function () {
+                    if(this.record.ids.length < 1){
+                        this.displayMsg('请选择机构');
+                        return false;
+                    }
+                    if(this.record.title === ''){
+                        this.displayMsg('请输入标题');
+                        return false;
+                    }
+
+                    if ($('#articleEditor').summernote('isEmpty')) {
+                        this.displayMsg('请输入<%= title %>内容');
+                        return false;
+                    }
+
+                    return true;
+                },
+                displayMsg: function (msg, isBack) {
+                    var _this = this;
+                    this.msg = msg;
+                    this.showErr = true;
+                    setTimeout(function () {
+                        _this.showErr = false;
+                        if(isBack){
+                            window.history.go(-2);
+                        }
+                    }, 1000);
+                },
+                save: function () {
+                    var _this = this;
+                    this.record.content = $('#articleEditor').summernote('code');
+                    if(this.checkParam()){
+                        var url = '<%= addUrl %>';
+                        if('<%= isEdit %>' === 'true'){
+                            this.record.id = '<%= id %>';
+                            url = '<%= editUrl %>';
+                        }
+                        if(this.isSave){
+                            this.isSave = false;
+                            var ids = [];
+                            for(var i=0,len=this.record.ids.length; i<len; i++){
+                                var arr = this.record.ids[i].split('[|]');
+                                ids.push(arr[0]);
+                            }
+                            this.record.ids = ids;
+                            Util.post(url, this.record, function (data) {
+                                _this.isSave = true;
+                                if((data.code + '') === '200'){
+                                    window.history.back();
+                                }else{
+                                    _this.displayMsg(data.msg, true);
+                                }
+                            });
+                        }
+                    }
+                },
+                removeFile: function (obj) {
+                    for(var i=0,len=this.record.files.length; i<len; i++){
+                        if(this.record.files[i].uploadUrl === obj.uploadUrl){
+                            this.record.files.splice(i, 1);
+                            break;
+                        }
+                    }
+                },
+                checkFileType: function (name) {
+                    var suportsuffix = "png|jpg|jpeg|gif|bmp",
+                        suffix = name.substr(name.lastIndexOf('.') + 1).toLocaleLowerCase();
+                    return suportsuffix.indexOf(suffix) >= 0;
+                },
+                uploadImg: function () {
+                    var _this = this;
+                    wx.chooseImage({
+                        count: 1, // 默认9
+                        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                        success: function (res) {
+                            var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                            if(res.localIds.length > 0){
+                                wx.uploadImage({
+                                    localId: res.localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
+                                    isShowProgressTips: 1,// 默认为1，显示进度提示
+                                    success: function (res) {
+                                        // var serverId = res.serverId; // 返回图片的服务器端ID
+                                        Util.post2('<%= uploadWeiXinImage %>?mediaId=' + res.serverId, {}, function (data) {
+                                            if((data.code + '') === '200'){
+                                                var file = data.data[0];
+                                                file.isImg = _this.checkFileType(file.fileName);
+                                                _this.record.files.push(file);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+                },
+                sendFile: function (file) {
+                    data = new FormData();  
+                    data.append("file", file);   
+                    $.ajax({  
+                        data: data,  
+                        type: "POST",  
+                        url: "/zuul/api/upload/zbzxfile",  
+                        cache: false,  
+                        contentType: false,  
+                        processData: false,  
+                        success: function(data) {  
+                            if(data.status == 1){                                
+                              $("#articleEditor").summernote('insertImage', data.url, 'image name'); // the insertImage API  
+                            }
+                        }  
+                    }); 
+                }
+            },
+            mounted: function () {
+              this.$nextTick(function () {
+                var _this = this;
+                $('#articleEditor').summernote({
+                    // toolbar: ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'fontsize', 'ul', 'ol', 'paragraph', 'color', 'height', 'picture'],
+                    toolbar: ['fontsize', 'paragraph', 'bold', 'italic', 'underline', 'picture'],
+                    fontSizes: ['12', '14', '16', '18', '24', '36'],
+                    placeholder: '请输入内容，10000个字符以内',
+                    tabsize: 2,
+                    minHeight: 120,
+                    callbacks: {  
+                        onImageUpload: function(files) { //the onImageUpload API  
+                            if(files.length > 0){
+                                if(files[0].size / (1024 * 1024) > 2){
+                                  _this.displayMsg('图片文件2M以内');
+                                }else{
+                                    _this.sendFile(files[0]);
+                                }                                
+                            }
+                        } 
+                    } 
+                });
+                if('<%= isEdit %>' === 'true'){
+                    Util.get('<%= getContentReturn %>', {}, function (data) {
+                        if((data.code + '') === '200'){
+                            var list = data.data.tenants || [];
+                            for(var i=0,len=list.length; i<len; i++){
+                                _this.record.ids.push(list[i].id + '[|]' + list[i].name);
+                            }
+                            _this.tenants = data.data.tenants;
+                            _this.record.title = data.data.title;
+                            _this.record.files = data.data.files || [];
+                            $('#articleEditor').summernote('code', data.data.content);
+                            for(var i=0,len=_this.record.files.length; i<len; i++){
+                                _this.record.files[i].isImg = _this.checkFileType(_this.record.files[i].fileName);
+                            }
+                        }else{
+                            _this.displayMsg(data.msg, true);
+                        }
+                    });
+                } 
+              })
+            }
+        });
+
+    });
+    
+    wx.error(function(res){
+        console.log('wx-----------------err');
+        console.log(res);
+    });
+    </script>
+</body>
+
+</html>

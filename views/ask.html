@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>我要<%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <link href="/javascripts/editor/summernote-lite.css" rel="stylesheet">
+    <style type="text/css">
+        html,body,textarea,p{margin:0;padding:0;}
+        html {background-color: #EFEFF4;}
+        @font-face {
+          font-family: 'iconfont';  /* project id 572487 */
+          src: url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.eot');
+          src: url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.eot?#iefix') format('embedded-opentype'),
+          url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.woff') format('woff'),
+          url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.ttf') format('truetype'),
+          url('//at.alicdn.com/t/font_572487_pi1kko727nl8fr.svg#iconfont') format('svg');
+        }
+        .iconfont{font-family:"iconfont" !important;font-size:16px;font-style:normal;-webkit-font-smoothing: antialiased;-webkit-text-stroke-width: 0.2px;-moz-osx-font-smoothing: grayscale;}
+        .title {padding-left: 10px;font-size: 14px;line-height: 30px;color: #999;}
+        .group {border-top: 1px solid #BFBFBF;background-color: #fff;}
+        .group-row {display: flex;height: 40px;font-size: 14px;line-height:40px;border-bottom: 1px solid #BFBFBF;}
+        .group-row label {display: inline-block;width: 70px;margin-left: 10px;}
+        .group-row .con {flex: 1;border: 0;outline: 0;}
+        .group-row .iconfont {display: inline-block;margin-right: 5px;}
+        .content {background-color: #fff;border-bottom: 1px solid #bfbfbf;overflow: hidden;}
+        .content textarea{display: block;width: 100%;min-height: 200px;border: 0;outline: 0;resize: none;}
+        .save {display: block;width: 80%;height:40px;margin: 20px auto;font-size:14px;line-height:40px;text-align:center;box-shadow: 5px 0 15px rgba(0,43,114,0.2);background-color: #199DD3;color: #fff;border-radius: 20px;text-decoration: none;}
+        .labels {position: fixed;right: 0;bottom: 0;left: 0;z-index: 5;background-color: #fff;box-shadow:0 0 18px rgba(0,0,0,0.34);transition: transform .3s, -webkit-transform .3s;transform: translate(0, 100%);}
+        .labels-item {position: relative;z-index: 0;margin: 0 10px;font-size: 14px; line-height: 36px;text-align: center;}
+        .labels-item + .labels-item {border-top: 1px solid #BEBEBE;}
+        .labels-show {-webkit-transform: translate(0, 0);transform: translate(0, 0);}
+        .labels .first {z-index: 1;margin: 0 0 -1px 0;border-bottom: 1px solid #333;}
+        .layout {position: fixed;top:0;right: 0;bottom: 0;left: 0;z-index: 4;background-color: rgba(0,0,0,.2);}
+        .msglayout {position: fixed;z-index: 9998;top: 0;left: 0;width: 100%;height: 100%;background-color: rgba(0, 0, 0, .1);display: table;transition: opacity .3s ease;}
+        .msgswrap {display: table-cell;vertical-align: middle;text-align: center;}
+        .msg {display: inline-block;padding: 10px;font-size: 14px;line-height: 20px;background-color: #333;color: #fff;}
+        #articleEditor {font-size: 14px;min-height: 200px;}
+        #articleEditor img {max-width: 100%;}
+        [v-cloak] {display: none;}
+        .upload {display: table;width: 100%;padding-bottom: 8px;margin: 20px 0;border-top: 1px solid #bfbfbf;border-bottom: 1px solid #bfbfbf;background-color: #fff;}
+        .upload .txt {width: 60px;font-size: 14px;line-height: 36px;text-align: right;}
+        .upload-td {display: table-cell;vertical-align: top;overflow: hidden;}
+        .upload-td .iconfont {font-size: 20px;line-height: 50px;text-align: center;}
+        .upload-td .item {position: relative;float:left;display: inline-block;width: 50px;height: 50px;border: 1px solid #bfbfbf;margin: 10px 0 0 14px;}
+        .upload-td .item .close2 {position: absolute;top: -7px;right: -7px;z-index:2;display: inline-block;width: 18px;height: 18px;font-size: 12px;line-height: 18px;text-align: center;background-color: #f00;color: #fff;border-radius: 50%;}
+        .upload-td .item a {display: block;position: absolute;top: 0;right: 0;bottom: 0;left: 0;z-index:1;text-decoration: none;}
+        .upload-td .item a img {width: 100%;height: 100%;}
+        .note-editor.note-frame {border: 0;}
+        .ql-align-center {text-align: center;}
+        .ql-align-right {text-align: right;}
+        .note-tooltip {display: none;}
+        .note-modal-header {padding: 10px;}
+        .note-modal-header .close {margin: 0;}
+        .note-modal-title {font-size: 18px;text-align: left;}
+        .note-input {border: 0;}
+    </style>
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <div class="title">联系方式</div>
+        <div class="group">
+            <div class="group-row">
+                <label>邮箱</label>
+                <input class="con" type="text" placeholder="请输入邮箱" v-model="record.email">
+            </div>
+            <div class="group-row">
+                <label>微信号</label>
+                <input class="con" type="text" maxlength="40" placeholder="请输入微信号" v-model="record.wx">
+            </div>
+        </div>
+        <div class="title">投诉内容</div>
+        <div class="group">
+            <div class="group-row">
+                <label>产品名称</label>
+                <input class="con" type="text" maxlength="40" placeholder="请输入产品名称，40个字符以内" v-model="record.productor">
+            </div>
+            <div class="group-row">
+                <label>厂商名称</label>
+                <input class="con" type="text" maxlength="40" placeholder="请输入厂商名称，40个字符以内" v-model="record.manufacturer">
+            </div>
+            <div class="group-row">
+                <label><%= title %>类型</label>
+                <input class="con" id="type" type="text" placeholder="请选择" readonly="readonly" v-model="optionName" @click="displayOption">
+                <i class="iconfont">&#xe616;</i>
+            </div>
+        </div>
+        <div class="group" style="margin-top: 20px;">        
+            <div class="group-row">
+                <label>标题</label>
+                <!-- <input class="con" type="text" maxlength="50" placeholder="标题名称，50个字符以内" v-model="record.title"> -->
+                <textarea class="con" type="text" maxlength="50" placeholder="标题名称，50个字符以内" v-model="record.title" style="padding: 13px 0 7px 0;resize: none;"></textarea>
+            </div>
+        </div>
+        <div class="content">
+            <div id="articleEditor"></div>
+        </div>
+        <div class="upload">
+            <div class="upload-td txt">上传附件</div>
+            <div class="upload-td">
+                <div class="item iconfont" v-if="record.files.length < 20" @click="uploadImg">&#xe63d;</div>
+                <div class="item" v-for="v in record.files">
+                    <div class="close2" @click="removeFile(v)">X</div>
+                    <a>
+                        <img :src="'<%= server %>/api/file' + v.uploadUrl">
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="save" @click="save">提交</div>
+        <div class="layout" id="layout" @click="closeOption" v-show="showOptions"></div>
+        <div class="labels" id="labels" :class="{'labels-show': showOptions}">
+            <div class="labels-item" style="position:relative;z-index:1;margin: 0;margin-bottom: -1px;border-bottom: 1px solid #bfbfbf;color: #999;">选择类型</div>
+            <div class="labels-item" v-for="(v, index) in labels" @click="selectOption(v, index + 1)">{{v}}</div>
+        </div>
+        <div v-show="showErr">
+            <div class="msglayout" id="msglayout">
+                <div class="msgswrap">
+                    <div class="msg" id="msg">{{msg}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+   
+    <script src="https://cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+    <script src="/javascripts/util.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script>
+        Util.get('<%= getJsSdkConfigInfo %>' + window.location.href, {}, function (data) {
+            wx.config({
+              debug: false,
+              appId: data.appId,
+              timestamp: data.timestamp,
+              nonceStr: data.nonceStr,
+              signature: data.signature,
+              jsApiList: [
+                'chooseImage',
+                'previewImage',
+                'uploadImage',
+                'downloadImage'
+              ]
+          });
+        });
+    </script>    
+    <script src="https://cdn.bootcss.com/vue/2.5.13/vue.min.js"></script>
+    <script src="/javascripts/editor/summernote-lite.js"></script>
+    <script>
+    wx.ready(function(){
+        new Vue({
+            el: '#app',
+            data: {
+                labels: '<%= label %>'.split('|'),
+                record: {
+                    email: '',
+                    wx: '',
+                    productor: '',
+                    manufacturer: '',
+                    type: 0,
+                    title: '',
+                    files:[],
+                    content: ''
+                },
+                optionName: '',
+                showOptions: false,
+                showErr: false,
+                msg: '',
+                isSave: true,
+                top: 0
+            },
+            methods: {
+                displayOption: function () {
+                    this.top = $('#app').scrollTop();
+                    this.showOptions = true;
+                    $('#app').css('overflow', 'hidden');
+                },
+                closeOption: function () {
+                    this.showOptions = false;
+                    $('#app').css('overflow', 'auto');
+                    $('#app').scrollTop(this.top);
+                },
+                selectOption: function (name, index){
+                    // this.showOptions = false;
+                    this.closeOption();
+                    this.record.type = +index;
+                    this.optionName = name;
+                },
+                displayMsg: function (msg) {
+                    var _this = this;
+                    this.showErr = true;
+                    this.msg = msg;
+                    setTimeout(function () {
+                        _this.showErr = false;
+                    }, 1000);
+                },
+                checkEmail: function (val) {
+                    if(val.length > 0){
+                        var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+                        return myreg.test(val);
+                    }
+                    return true;
+                },
+                checkParam: function () {
+                    if(!this.checkEmail(this.record.email)){
+                        this.displayMsg('邮箱格式不正确');
+                        return false;
+                    }
+                    if(this.record.productor === ''){
+                        this.displayMsg('请输入产品名称');
+                        return false;
+                    }
+
+                    if(this.record.manufacturer === ''){
+                        this.displayMsg('请输入厂商名称');
+                        return false;
+                    }
+
+                    if(this.record.type === 0){
+                        this.displayMsg('请选择<%= title %>类型');
+                        return false;
+                    }
+
+                    if(this.record.title === ''){
+                        this.displayMsg('请输入标题');
+                        return false;
+                    }
+
+                    if ($('#articleEditor').summernote('isEmpty')) {
+                        this.displayMsg('请输入<%= title %>内容');
+                        return false;
+                    }
+
+                    return true;
+                },
+                save: function () {
+                    var _this = this;
+                    this.record.content = $('#articleEditor').summernote('code');
+                    if(this.checkParam()){
+                        if(this.isSave){
+                            this.isSave = false;
+                            Util.post('<%= url %>', this.record, function (data) {
+                                _this.isSave = true;
+                                if((data.code + '') === '200'){
+                                    window.history.back();
+                                }else{
+                                    this.displayMsg(data.msg);
+                                }
+                            });
+                        }
+                    }
+                },
+                removeFile: function (obj) {
+                    for(var i=0,len=this.record.files.length; i<len; i++){
+                        if(this.record.files[i].uploadUrl === obj.uploadUrl){
+                            this.record.files.splice(i, 1);
+                            break;
+                        }
+                    }
+                },
+                uploadImg: function () {
+                    var _this = this;
+                    wx.chooseImage({
+                        count: 1, // 默认9
+                        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                        success: function (res) {
+                            var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                            if(res.localIds.length > 0){
+                                wx.uploadImage({
+                                    localId: res.localIds[0], // 需要上传的图片的本地ID，由chooseImage接口获得
+                                    isShowProgressTips: 1,// 默认为1，显示进度提示
+                                    success: function (res) {
+                                        var serverId = res.serverId; // 返回图片的服务器端ID
+                                        Util.post('<%= uploadWeiXinImage %>?mediaId=' + res.serverId, {}, function (data) {
+                                            if((data.code + '') === '200'){
+                                                var file = data.data[0];
+                                                _this.record.files.push(file);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+                },
+                sendFile: function (file) {
+                    data = new FormData();  
+                    data.append("file", file);  
+                    $.ajax({  
+                        data: data,  
+                        type: "POST",  
+                        url: "/zuul/api/upload/zbzxfile",  
+                        cache: false,  
+                        contentType: false,  
+                        processData: false,  
+                        success: function(data) {  
+                            if(data.status == 1){                                
+                              $("#articleEditor").summernote('insertImage', data.url, 'image name'); // the insertImage API  
+                            }
+                        }  
+                    }); 
+                }
+            },
+            mounted: function () {
+              this.$nextTick(function () {
+                var _this = this;
+                $('#app').css({'height': $(window).height()});
+                $('#articleEditor').summernote({
+                    // toolbar: ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'fontsize', 'ul', 'ol', 'paragraph', 'color', 'height', 'picture'],
+                    toolbar: ['fontsize', 'paragraph', 'bold', 'italic', 'underline', 'picture'],
+                    fontSizes: ['12', '14', '16', '18', '24', '36'],
+                    placeholder: '请输入内容，10000个字符以内',
+                    tabsize: 2,
+                    minHeight: 120,
+                    callbacks: {  
+                        onImageUpload: function(files) { //the onImageUpload API  
+                            if(files.length > 0){
+                                if(files[0].size / (1024 * 1024) > 2){
+                                  _this.displayMsg('图片文件2M以内');
+                                }else{
+                                    _this.sendFile(files[0]);
+                                }                                
+                            }
+                        } 
+                    } 
+                });
+              })
+            }
+        });
+    });
+    
+    wx.error(function(res){
+        console.log('wx-----------------err');
+        console.log(res);
+    });
+    </script>
+</body>
+
+</html>

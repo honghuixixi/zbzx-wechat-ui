@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <style type="text/css">
+        html,body,header,footer,h1,h2{margin:0;padding:0;}
+        html {height: 100%;}
+        header {position:fixed;top: 0;right: 0;left: 0;z-index: 3;padding: 10px 0 10px 20px;display: flex;font-size: 14px;background-color: #fff;box-shadow: 0 0 10px rgba(0,43,114,0.2);}
+        header .iconfont {position: absolute;top: 19px;left:30px;z-index: 0;font-size: 14px;color: #999;}
+        header input {flex: 1;height: 30px;padding:0 15px 0 30px;border-radius: 15px;border: 1px solid #BEBEBE;outline: 0;}
+        header span {display: inline-block;width:80px;line-height:30px;text-align: center;color: #2EA5D6;}
+        @font-face {
+          font-family: 'iconfont';  /* project id 572487 */
+          src: url('//at.alicdn.com/t/font_572487_b7zmsazose0fi529.eot');
+          src: url('//at.alicdn.com/t/font_572487_b7zmsazose0fi529.eot?#iefix') format('embedded-opentype'),
+          url('//at.alicdn.com/t/font_572487_b7zmsazose0fi529.woff') format('woff'),
+          url('//at.alicdn.com/t/font_572487_b7zmsazose0fi529.ttf') format('truetype'),
+          url('//at.alicdn.com/t/font_572487_b7zmsazose0fi529.svg#iconfont') format('svg');
+        }
+        .iconfont{font-family:"iconfont" !important;font-size:16px;font-style:normal;-webkit-font-smoothing: antialiased;-webkit-text-stroke-width: 0.2px;-moz-osx-font-smoothing: grayscale;}
+        .row{position: relative;display: block;margin: 0 30px 10px 20px;padding-bottom:10px;border-bottom: 1px solid #EEE;text-decoration: none;}
+        .row .title {font-size: 14px;font-weight: 700;line-height: 20px;margin-bottom: 5px;color: #333;word-break: break-all;}
+        .row .info{display: flex;font-size: 14px;}
+        .row .info .org{flex: 1;height:19px;color: #666;overflow: hidden;word-break: break-all;}
+        .row .info .time{width: 130px;color: #999;text-align: right}
+        .row:after {content: '\e616';position: absolute;top:0;right: -25px;font-family:"iconfont" !important;font-size: 18px;color: #999;}
+        .tip:before {content: '';position: absolute;top: 6px;left: -12px;width: 8px;height: 8px;border-radius: 50%;background-color: #2EA5D6;}
+        .add {position: fixed;right: 20px;bottom: 50px;z-index: 5;display: none;width: 30px;height: 30px;font-size: 30px;line-height: 30px;text-align: center;border-radius: 50%;background-color: #2EA5D6;color: #fff;text-decoration: none;}
+        .empty {display: none;font-size: 14px;text-align: center;color: #999;}
+        .empty img {width: 70px;margin-top: 10px;}
+        .history {display: none;}
+        .history .top {margin: 0 10px;font-size: 18px;line-height: 36px;border-bottom: 1px solid #bfbfbf;}
+        .history .list {margin: 0 10px;min-height: 36px;}
+        .history .list .item {font-size: 16px;line-height: 32px;}
+        .history .list .item + .item {border-top: 1px solid #bfbfbf;}
+        .history .list .item:before {content: '\e652';margin-right: 5px;font-family:"iconfont" !important;}
+        .history .del {font-size: 12px;line-height: 30px;border-top: 1px solid #bfbfbf;text-align: center;}
+        .history .del div {display: inline-block;overflow: hidden;}
+        .history .del div .iconfont {float: left;margin-top: 0;margin-right: 3px;}
+    </style>
+</head>
+
+<body>
+    <header>
+        <i class="iconfont">&#xe652;</i>
+        <input id="kwd" type="text" placeholder="<%= holder %>" onclick="Util.showHistory('<%= loginName %>')">
+        <span onclick="search()">搜索</span>
+    </header>
+    <div class="main" id="main" style="margin-top: 62px;">
+        <div id="list"></div>
+        <div class="empty" id="empty">
+            <img src="data:image/png;base64,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" alt="nodata">
+            <div>暂无数据</div>
+        </div>
+        <a class="add" id="add" href="<%= link %>">+</a>
+    </div>
+    <div class="history" id="history" style="margin-top: 62px;">
+        <div class="top">历史记录</div>
+        <div class="list" id="hisList"></div>
+        <div class="del" onclick="clearHis()">
+            <div><i class="iconfont">&#xe609;</i>清空历史记录</div>
+        </div>
+    </div>
+    <script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+    <script src="/javascripts/util.js"></script>
+    <script>   
+        var pageSize = 10,
+            page = 1,
+            total = 0,
+            canLoad = true;  
+        function search() {
+            Util.search('<%= loginName %>', function () {
+                page = 1;
+                total = 0;
+                canLoad = true;
+                getList(1);
+            });
+        }
+        function chooseHis(sender) {            
+            $('#kwd').val($(sender).text());
+            search();
+        }
+        function clearHis() {
+            localStorage.removeItem('<%= loginName %>');
+            // $('#kwd').val('');
+            Util.showHistory('<%= loginName %>');
+        }
+        function getList(page) {
+            Util.get('<%= url %>', { pageNo: page, pageSize: pageSize, keyword: $('#kwd').val() }, function (data) {
+                canLoad = true;
+                if((data.code + '') === '200'){
+                    total = parseInt((data.data.total - 1) / pageSize) + 1;
+                    Util.displayList(data.data.records, $("#list"), '<%= detail %>');
+                }
+            });
+        }
+        window.onload = function () {
+            var type = '<%= type %>';
+            getList(1);
+            Util.scrollLoad(function () {
+                if(canLoad && page < total){
+                    canLoad = false;
+                    getList(++page);
+                }
+            });
+            $('#add').hide();
+            if(+type === 2) {
+                $('#add').show();
+            }
+        };
+        $(function () {   
+          var isPageHide = false;   
+          window.addEventListener('pageshow', function () {   
+            if (isPageHide) {   
+              window.location.reload();   
+            }   
+          });   
+          window.addEventListener('pagehide', function () {   
+            isPageHide = true;   
+          });   
+        });
+    </script>
+</body>
+
+</html>
